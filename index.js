@@ -23,8 +23,16 @@ app.get("/api/hello", function (req, res) {
     res.json({ greeting: "hello API" });
 });
 
+app.get("/api", function (req, res) {
+    res.json({ unix: new Date().valueOf(), utc: new Date().toUTCString() });
+});
+
 app.get("/api/:rawDate", function (req, res) {
     const { rawDate } = req.params;
+
+    console.log("unixTimestamp", new Date().valueOf());
+
+    if (!rawDate) return res.json({});
 
     // Checking if Date is coming in String or in Timestamp & Parsing it Accordingly.
     const unixDate = rawDate.includes("-") ? Date.parse(rawDate) : parseInt(rawDate);
