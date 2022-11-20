@@ -30,15 +30,13 @@ app.get("/api", function (req, res) {
 app.get("/api/:rawDate", function (req, res) {
     const { rawDate } = req.params;
 
-    console.log("unixTimestamp", new Date().valueOf());
-
-    if (!rawDate) return res.json({});
-
     // Checking if Date is coming in String or in Timestamp & Parsing it Accordingly.
-    const unixDate = rawDate.includes("-") ? Date.parse(rawDate) : parseInt(rawDate);
+    let unixDate = rawDate.includes("-") ? Date.parse(rawDate) : parseInt(rawDate);
+    if (isNaN(unixDate) || unixDate <= 31) unixDate = new Date(rawDate).valueOf();
 
     // Again Checking and Converting the Date to UTC based on the Date Recived.
-    const uTCDate = new Date(rawDate.includes("-") ? rawDate : rawDate * 1).toUTCString();
+    let uTCDate = new Date(rawDate.includes("-") ? rawDate : rawDate * 1).toUTCString();
+    if (uTCDate === "Invalid Date") uTCDate = new Date(rawDate).toUTCString();
 
     //Based on the Validatation Sending the Response.
     if ([uTCDate, unixDate].includes("Invalid Date")) {
